@@ -1,5 +1,8 @@
-#include <Arduino.h>
 #include <TheLock.h>
+
+#ifndef LED_BUILTIN 
+#define LED_BUILTIN 13
+#endif
 
 TheLock::TheLock()
 {
