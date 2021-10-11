@@ -9,7 +9,6 @@ AutoConnect      Portal(Server);
 AutoConnectConfig config;
 
 
-#define DEFAULT_AP "esp32d"
 #define DEFAULT_AP_PASSWD "987654321abc"
 
 #define DEFAULT_USER "user"
@@ -81,21 +80,29 @@ bool whileCaptivePortal()
   return true;
 }
 
+
 void portalSetup()
 {
   config.auth = AC_AUTH_DIGEST;
   config.authScope = AC_AUTHSCOPE_PARTIAL | AC_AUTHSCOPE_WITHCP;
   config.username = DEFAULT_USER;
   config.password = DEFAULT_PASSWD;
+  config.ota = AC_OTA_BUILTIN;
 
     // Setup AutoConnect
   Serial.print("ESP Board MAC Address:  ");
   Serial.println(WiFi.macAddress());
 
-  Portal.config(DEFAULT_AP, DEFAULT_AP_PASSWD);
+  config.apid = "ESP-" + String((uint32_t)(ESP.getEfuseMac() >> 32), HEX);
+  config.psk = DEFAULT_AP_PASSWD;
+
   Portal.onConnect(apConnectCallback);
   Portal.onDetect(apDetectCallback);
   Portal.whileCaptivePortal(whileCaptivePortal);
+
+  config.ticker = true;
+  config.tickerPort = LED_BUILTIN;
+  config.tickerOn = LOW;
 
   Portal.config(config);
   Portal.load(FPSTR(PAGE_HELLO));

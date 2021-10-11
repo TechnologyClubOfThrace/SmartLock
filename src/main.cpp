@@ -9,7 +9,6 @@ extern void cardReadSetup();
 extern void cardReadLoop();
 
 void setup() {
-  delay(1000);
   Serial.begin(115200);		
 
   portalSetup();
